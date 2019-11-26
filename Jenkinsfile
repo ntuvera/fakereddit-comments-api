@@ -34,6 +34,11 @@ pipeline {
                 }
             }
         }
+        stage('Generate xml') {
+            steps {
+                sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+            }
+        }
     }
     post {
         always {
