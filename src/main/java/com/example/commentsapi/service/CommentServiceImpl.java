@@ -8,8 +8,10 @@ import com.example.commentsapi.model.Comment;
 import com.example.commentsapi.mq.Sender;
 import com.example.commentsapi.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -29,7 +31,11 @@ public class CommentServiceImpl implements CommentService {
     private PostClient postClient;
 
     @Override
-    public Comment createComment(Comment comment, int postId, int userId, String username) {
+    public Comment createComment(Comment comment, int postId, int userId, String username) throws EntityNotFoundException {
+        if(commentRepository.findById(postId) == null)
+//            throw new EntityNotFoundException(HttpStatus.BAD_REQUEST, "Post not found");
+            throw new EntityNotFoundException("Post not found");
+
         HashMap<String, String> usernameMap = new HashMap<>();
         usernameMap.put("username", username);
 
@@ -45,8 +51,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Iterable<Comment> listCommentsByPostId(int postId) {
-        listComments();
-        sender.sendPostId(postId);
+//        listComments();
+//        sender.sendPostId(postId);
 
         return commentRepository.listCommentsByPostId(postId);
     }
@@ -58,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.listCommentsByUserId(userId);
     }
 
-    private Iterable<Comment> listComments() {
+    protected Iterable<Comment> listComments() {
         Iterable<Comment> foundUserComments = commentRepository.findAll();
 
         foundUserComments.forEach((comment) -> {
