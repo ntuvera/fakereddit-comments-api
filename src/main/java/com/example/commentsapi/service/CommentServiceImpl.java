@@ -8,7 +8,6 @@ import com.example.commentsapi.model.Comment;
 import com.example.commentsapi.mq.Sender;
 import com.example.commentsapi.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -32,17 +31,20 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(Comment comment, int postId, int userId, String username) throws EntityNotFoundException {
-        if(commentRepository.findById(postId) == null)
-//            throw new EntityNotFoundException(HttpStatus.BAD_REQUEST, "Post not found");
-            throw new EntityNotFoundException("Post not found");
+        // TODO: add missing post case
+        PostBean targetPost = postClient.getPostById(postId);
+        UserBean targetUser = userClient.getUserById(userId);
+        if(targetPost == null) {
+            throw new EntityNotFoundException("Post does not exist");
+        }
 
         HashMap<String, String> usernameMap = new HashMap<>();
         usernameMap.put("username", username);
 
         comment.setPostId(postId);
         comment.setUserId(userId);
-        comment.setUser(userClient.getUserById(userId));
-        comment.setPost(postClient.getPostById(postId));
+        comment.setUser(targetUser);
+        comment.setPost(targetPost);
 
         Comment newComment = commentRepository.save(comment);
 

@@ -9,23 +9,13 @@ public class ErrorResponse {
     private String cause;
     private String timestamp;
 
-    public ErrorResponse(HttpStatus httpStatus, String message, String cause, String timestamp) {
-        super();
-        this.httpStatus = httpStatus;
-        this.message = message;
-        this.cause = cause;
-        this.timestamp = timestamp;
-    }
-
     public ErrorResponse(HttpStatus httpStatus, String message) {
         super();
         this.httpStatus = httpStatus;
         this.message = message;
     }
 
-    public ErrorResponse(String message) {
-        this.message = message;
-    }
+    public ErrorResponse() { }
 
     public HttpStatus getHttpStatus() {
         return httpStatus;

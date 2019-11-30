@@ -6,9 +6,9 @@ public class UserBean {
 
     public UserBean() { }
 
-    public UserBean(String username) {
-        this.username = username;
-    }
+//    public UserBean(String username) {
+//        this.username = username;
+//    }
 
     public UserBean(int id, String username) {
         this.id = id;

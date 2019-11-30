@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,8 +53,7 @@ public class CommentServiceTest {
     public void init() {
         tempComment = new Comment("This is a comment", 1, 1);
         commentList = new ArrayList<Comment>();
-        tempUser = new UserBean("Ice T");
-        tempUser.setId(1);
+        tempUser = new UserBean(1, "Ice T");
         tempPost = new PostBean(1, "Quote from Ice T.", "I make an effort to keep it as real as I possible can", tempUser.getId());
 //        commentList.add(tempComment);
     }
@@ -69,6 +69,12 @@ public class CommentServiceTest {
         assertEquals(tempComment.getText(), createdComment.getText());
         assertEquals(tempComment.getUserId(), createdComment.getUserId());
         assertEquals(tempComment.getPostId(), createdComment.getPostId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void createComment_Comment_Failure() {
+        when(postClient.getPostById(anyInt())).thenReturn(null);
+        Comment failedComment = commentService.createComment(tempComment, tempPost.getId(), tempUser.getId(), tempUser.getUsername());
     }
 
     @Test
@@ -93,6 +99,8 @@ public class CommentServiceTest {
     @Test
     public void listComments_Comments_Success() {
         when(commentRepository.findAll()).thenReturn(commentList);
+        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
+        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
 
         Iterable<Comment> returnedComments = commentService.listComments();
         System.out.println(commentList.getClass());
@@ -101,15 +109,17 @@ public class CommentServiceTest {
         assertEquals(commentList, returnedComments);
     }
 
-//    @Test
-//    public void deleteByCommentId_String_Success() {
+    @Test
+    public void deleteByCommentId_String_Success() {
 //        when(commentRepository.deleteById(anyInt())).thenReturn(null);
 //        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(tempComment));
-//
-//        String response = commentService.deleteByCommentId(tempComment.getId());
-//
-//        assertEquals("Delete comment succeeded", response);
-//    }
+        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(tempComment));
+//        when(java.util.Optional.ofNullable(tempComment).isPresent()).thenReturn(true);
+
+        String response = commentService.deleteByCommentId(tempComment.getId());
+
+        assertEquals("Delete comment succeeded", response);
+    }
 
     @Test
     public void deleteByCommentId_String_Failure() {
