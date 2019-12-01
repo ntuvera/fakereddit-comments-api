@@ -10,6 +10,7 @@ import com.example.commentsapi.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -29,14 +30,21 @@ public class CommentServiceImpl implements CommentService {
     private PostClient postClient;
 
     @Override
-    public Comment createComment(Comment comment, int postId, int userId, String username) {
+    public Comment createComment(Comment comment, int postId, int userId, String username) throws EntityNotFoundException {
+        // TODO: add missing post case
+        PostBean targetPost = postClient.getPostById(postId);
+        UserBean targetUser = userClient.getUserById(userId);
+        if(targetPost == null) {
+            throw new EntityNotFoundException("Post does not exist");
+        }
+
         HashMap<String, String> usernameMap = new HashMap<>();
         usernameMap.put("username", username);
 
         comment.setPostId(postId);
         comment.setUserId(userId);
-        comment.setUser(userClient.getUserById(userId));
-        comment.setPost(postClient.getPostById(postId));
+        comment.setUser(targetUser);
+        comment.setPost(targetPost);
 
         Comment newComment = commentRepository.save(comment);
 
@@ -45,8 +53,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Iterable<Comment> listCommentsByPostId(int postId) {
-        listComments();
-        sender.sendPostId(postId);
+//        listComments();
+//        sender.sendPostId(postId);
 
         return commentRepository.listCommentsByPostId(postId);
     }
@@ -58,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.listCommentsByUserId(userId);
     }
 
-    private Iterable<Comment> listComments() {
+    protected Iterable<Comment> listComments() {
         Iterable<Comment> foundUserComments = commentRepository.findAll();
 
         foundUserComments.forEach((comment) -> {
