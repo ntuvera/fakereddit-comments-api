@@ -81,7 +81,7 @@ public class CommentServiceTest {
     @Test
     public void listCommentsByPostId_Comments_Success() {
         // TODO: Check with someone this test is valid?
-        when(commentRepository.listCommentsByUserId(anyInt())).thenReturn(commentList);
+        when(commentRepository.listCommentsByPostId(anyInt())).thenReturn(commentList);
 
         Iterable<Comment> returnedComments = commentService.listCommentsByPostId(tempPost.getUser_id());
 
@@ -100,8 +100,8 @@ public class CommentServiceTest {
     @Test
     public void listComments_Comments_Success() {
         when(commentRepository.findAll()).thenReturn(commentList);
-        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
-        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
+//        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
+//        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
 
         Iterable<Comment> returnedComments = commentService.listComments();
         System.out.println(commentList.getClass());
