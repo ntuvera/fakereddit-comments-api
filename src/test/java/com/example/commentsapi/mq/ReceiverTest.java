@@ -11,7 +11,7 @@ public class ReceiverTest {
     public void receiver_Success() {
 
     }
-    @Test(expected = InterruptedException.class)
-    public void receiver_Failure() {
-    }
+//    @Test(expected = InterruptedException.class)
+//    public void receiver_Failure() {
+//    }
 }
