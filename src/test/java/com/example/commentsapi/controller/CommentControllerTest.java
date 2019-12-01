@@ -120,7 +120,7 @@ public class CommentControllerTest {
                 .get("/user/comment")
                 .accept(MediaType.APPLICATION_JSON);
 
-        when(commentService.listCommentsByUserId(anyInt())).thenReturn(new ArrayList<Comment>());
+//        when(commentService.listCommentsByUserId(anyInt())).thenReturn(new ArrayList<Comment>());
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isBadRequest());

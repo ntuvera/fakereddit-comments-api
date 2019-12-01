@@ -16,7 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -80,7 +81,7 @@ public class CommentServiceTest {
     @Test
     public void listCommentsByPostId_Comments_Success() {
         // TODO: Check with someone this test is valid?
-        when(commentRepository.listCommentsByUserId(anyInt())).thenReturn(commentList);
+        when(commentRepository.listCommentsByPostId(anyInt())).thenReturn(commentList);
 
         Iterable<Comment> returnedComments = commentService.listCommentsByPostId(tempPost.getUser_id());
 
@@ -99,8 +100,8 @@ public class CommentServiceTest {
     @Test
     public void listComments_Comments_Success() {
         when(commentRepository.findAll()).thenReturn(commentList);
-        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
-        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
+//        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
+//        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
 
         Iterable<Comment> returnedComments = commentService.listComments();
         System.out.println(commentList.getClass());
@@ -111,10 +112,7 @@ public class CommentServiceTest {
 
     @Test
     public void deleteByCommentId_String_Success() {
-//        when(commentRepository.deleteById(anyInt())).thenReturn(null);
-//        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(tempComment));
-        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(tempComment));
-//        when(java.util.Optional.ofNullable(tempComment).isPresent()).thenReturn(true);
+        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(tempComment).empty());
 
         String response = commentService.deleteByCommentId(tempComment.getId());
 
