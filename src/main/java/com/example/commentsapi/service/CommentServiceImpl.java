@@ -53,8 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Iterable<Comment> listCommentsByPostId(int postId) {
-//        listComments();
-//        sender.sendPostId(postId);
+        listComments();
 
         return commentRepository.listCommentsByPostId(postId);
     }
@@ -76,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
                 comment.setUser(fetchedUser);
 
             PostBean fetchedPost = postClient.getPostById(comment.getPostId());
-
+            fetchedPost.setUser(userClient.getUserById(fetchedPost.getUser_id()));
             if(fetchedPost != null)
                 comment.setPost(fetchedPost);
         });
