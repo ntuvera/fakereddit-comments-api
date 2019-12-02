@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -23,7 +22,7 @@ public class ReceiverTest {
     @Test
     public void receiver_Success() throws InterruptedException {
         receiver.receive("1");
-//        verify(commentRepository, times(1)).purgeComments(eq(1));
+
        verify(commentService, times(1)).deleteByPostId(1);
     }
 }
