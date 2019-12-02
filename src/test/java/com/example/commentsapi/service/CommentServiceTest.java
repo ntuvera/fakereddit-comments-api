@@ -18,9 +18,8 @@ import java.util.ArrayList;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommentServiceTest {
@@ -53,6 +52,7 @@ public class CommentServiceTest {
     @Before
     public void init() {
         tempComment = new Comment("This is a comment", 1, 1);
+        tempComment.setId(1);
         commentList = new ArrayList<Comment>();
         tempUser = new UserBean(1, "Ice T");
         tempPost = new PostBean(1, "Quote from Ice T.", "I make an effort to keep it as real as I possible can", tempUser.getId());
@@ -100,12 +100,14 @@ public class CommentServiceTest {
     @Test
     public void listComments_Comments_Success() {
         when(commentRepository.findAll()).thenReturn(commentList);
-//        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
-//        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
+        when(userClient.getUserById(anyInt())).thenReturn(tempUser);
+        when(postClient.getPostById(anyInt())).thenReturn(tempPost);
+//
+//        verify(commentRepository, times(1)).purgeComments(eq(1));
+        verify(userClient, times(1)).getUserById(tempComment.getUserId());
+        verify(postClient, times(1)).getPostById(tempComment.getPostId());
 
         Iterable<Comment> returnedComments = commentService.listComments();
-        System.out.println(commentList.getClass());
-        System.out.println(returnedComments.getClass());
 
         assertEquals(commentList, returnedComments);
     }
@@ -128,12 +130,10 @@ public class CommentServiceTest {
         assertEquals("Delete comment failed", response);
     }
 
-//    @Test
-//    public void deleteByPostId() {
-//        when(commentRepository.purgeComments(any())).thenReturn(null);
-//
-//        void response = deleteByPostId(tempPost.getId());
-//
-//        assertEquals(null, response);
-//    }
+    @Test
+    public void deleteByPostId() {
+        commentService.deleteByPostId(tempComment.getId());
+
+        verify(commentRepository, times(1)).purgeComments(eq(1));
+    }
 }
