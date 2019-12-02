@@ -14,8 +14,7 @@ public interface CommentRepository extends CrudRepository<Comment, Integer> {
     @Transactional
     @Modifying
     @Query("delete from Comment c where c.postId=:postId")
-    void purgeComments(@PathVariable("postId") int postId);
-//    void purgeComments(@PathVariable("postId") int postId);
+    public void purgeComments(@PathVariable("postId") int postId);
 
     @Query(value="SELECT c.*, p.* FROM comments AS c JOIN posts AS p ON p.id = c.post_id WHERE c.post_id = :postId", nativeQuery = true)
     public Iterable<Comment> listCommentsByPostId(int postId);
