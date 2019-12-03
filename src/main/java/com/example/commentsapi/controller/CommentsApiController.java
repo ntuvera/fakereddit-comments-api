@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Api(value = "Comment Management System")
+@RequestMapping("/")
 public class CommentsApiController {
 
     @Autowired
@@ -18,7 +19,7 @@ public class CommentsApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully created a Comment")
     })
-    @PostMapping("/{postId}")
+    @PostMapping("/comment/{postId}")
     public Comment createComment(@ApiParam(value="postId", required=true) @RequestBody Comment comment, @PathVariable int postId, @RequestHeader("userId") int userId, @RequestHeader("username") String username) {
         return commentService.createComment(comment, postId, userId, username);
     }
@@ -46,7 +47,7 @@ public class CommentsApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully Delete Comment with commentId")
     })
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     public String deleteByCommentId(@ApiParam(value="commentId", required=true) @PathVariable int commentId) {
         return commentService.deleteByCommentId(commentId);
     }
