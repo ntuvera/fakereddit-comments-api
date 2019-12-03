@@ -48,7 +48,7 @@ public class CommentsApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully Delete Comment with commentId")
     })
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("/{commentId}")
     public String deleteByCommentId(@ApiParam(value="commentId", required=true) @PathVariable int commentId) {
         return commentService.deleteByCommentId(commentId);
     }
