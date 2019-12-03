@@ -2,11 +2,13 @@ package com.example.commentsapi.service;
 
 import com.example.commentsapi.bean.PostBean;
 import com.example.commentsapi.bean.UserBean;
+import com.example.commentsapi.exception.EmptyInputException;
 import com.example.commentsapi.feign.PostClient;
 import com.example.commentsapi.feign.UserClient;
 import com.example.commentsapi.model.Comment;
 import com.example.commentsapi.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,12 +28,15 @@ public class CommentServiceImpl implements CommentService {
     private PostClient postClient;
 
     @Override
-    public Comment createComment(Comment comment, int postId, int userId, String username) throws EntityNotFoundException {
-        // TODO: add missing post case
+    public Comment createComment(Comment comment, int postId, int userId, String username) throws EntityNotFoundException, EmptyInputException {
         PostBean targetPost = postClient.getPostById(postId);
         UserBean targetUser = userClient.getUserById(userId);
         if(targetPost == null) {
             throw new EntityNotFoundException("Post does not exist");
+        }
+
+        if(comment.getText().trim() == "") {
+            throw new EmptyInputException(HttpStatus.BAD_REQUEST,"Comment text cannot be blank");
         }
 
         HashMap<String, String> usernameMap = new HashMap<>();

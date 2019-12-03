@@ -1,5 +1,6 @@
 package com.example.commentsapi.controller;
 
+import com.example.commentsapi.exception.EmptyInputException;
 import com.example.commentsapi.model.Comment;
 import com.example.commentsapi.service.CommentServiceImpl;
 import io.swagger.annotations.*;
@@ -19,7 +20,7 @@ public class CommentsApiController {
             @ApiResponse(code = 201, message = "Successfully created a Comment")
     })
     @PostMapping("/{postId}")
-    public Comment createComment(@ApiParam(value="postId", required=true) @RequestBody Comment comment, @PathVariable int postId, @RequestHeader("userId") int userId, @RequestHeader("username") String username) {
+    public Comment createComment(@ApiParam(value="postId", required=true) @RequestBody Comment comment, @PathVariable int postId, @RequestHeader("userId") int userId, @RequestHeader("username") String username) throws EmptyInputException {
         return commentService.createComment(comment, postId, userId, username);
     }
 
