@@ -3,7 +3,9 @@ package com.example.commentsapi.exception;
 import org.springframework.http.HttpStatus;
 
 public class EmptyInputException extends Exception {
-    public EmptyInputException(HttpStatus notFound, String message) {
+    private HttpStatus httpStatus;
+
+    public EmptyInputException(HttpStatus httpStatus, String message) {
         super(message);
     }
 }
