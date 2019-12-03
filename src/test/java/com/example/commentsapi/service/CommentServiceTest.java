@@ -2,6 +2,7 @@ package com.example.commentsapi.service;
 
 import com.example.commentsapi.bean.PostBean;
 import com.example.commentsapi.bean.UserBean;
+import com.example.commentsapi.exception.EmptyInputException;
 import com.example.commentsapi.feign.PostClient;
 import com.example.commentsapi.feign.UserClient;
 import com.example.commentsapi.model.Comment;
@@ -60,7 +61,7 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void createComment_Comment_Success() {
+    public void createComment_Comment_Success() throws EmptyInputException {
         when(userClient.getUserById(anyInt())).thenReturn(tempUser);
         when(postClient.getPostById(anyInt())).thenReturn(tempPost);
         when(commentRepository.save(any())).thenReturn(tempComment);
@@ -73,7 +74,7 @@ public class CommentServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void createComment_Comment_Failure() {
+    public void createComment_Comment_Failure() throws EmptyInputException {
         when(postClient.getPostById(anyInt())).thenReturn(null);
         Comment failedComment = commentService.createComment(tempComment, tempPost.getId(), tempUser.getId(), tempUser.getUsername());
     }
@@ -102,8 +103,7 @@ public class CommentServiceTest {
         when(commentRepository.findAll()).thenReturn(commentList);
         when(userClient.getUserById(anyInt())).thenReturn(tempUser);
         when(postClient.getPostById(anyInt())).thenReturn(tempPost);
-//
-//        verify(commentRepository, times(1)).purgeComments(eq(1));
+
         verify(userClient, times(1)).getUserById(tempComment.getUserId());
         verify(postClient, times(1)).getPostById(tempComment.getPostId());
 
