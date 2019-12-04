@@ -147,6 +147,7 @@ public class CommentControllerTest {
                 .header("userId", fakeUser.getId())
                 .accept(MediaType.APPLICATION_JSON);
 
+        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(fakeComment));
         when(commentService.deleteByCommentId(anyInt())).thenReturn("Delete comment failed");
 
         mockMvc.perform(requestBuilder)
