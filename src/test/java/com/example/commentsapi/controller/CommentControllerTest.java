@@ -143,11 +143,10 @@ public class CommentControllerTest {
     @Test
     public void deleteByCommentId_String_Failure() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/" + fakeComment.getId())
+                .delete("/0")
                 .header("userId", fakeUser.getId())
                 .accept(MediaType.APPLICATION_JSON);
 
-        when(commentRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(fakeComment));
         when(commentService.deleteByCommentId(anyInt())).thenReturn("Delete comment failed");
 
         mockMvc.perform(requestBuilder)
@@ -161,8 +160,6 @@ public class CommentControllerTest {
                 .delete("/purge/" + fakeComment.getPostId())
                 .header("userId", fakeUser.getId())
                 .accept(MediaType.APPLICATION_JSON);
-
-//        when(commentService.deleteByPostId(anyInt())).thenReturn(null);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk());
