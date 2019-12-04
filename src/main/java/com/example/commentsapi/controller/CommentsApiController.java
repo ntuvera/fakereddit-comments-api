@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Api(value = "Comment Management System")
+@RequestMapping("/")
 public class CommentsApiController {
 
     @Autowired
