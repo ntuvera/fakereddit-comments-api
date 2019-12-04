@@ -97,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
             return "Delete comment failed";
         }
 
-        logger.info("A comment was just deleted comment text: " + foundComment.get().getText());
+        logger.info("A comment was just deleted comment id: " + commentId);
 
         return "Delete comment succeeded";
     }
