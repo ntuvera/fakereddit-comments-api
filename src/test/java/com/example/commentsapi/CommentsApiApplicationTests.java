@@ -1,6 +1,5 @@
 package com.example.commentsapi;
 
-//import org.junit.jupiter.api.Test;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
